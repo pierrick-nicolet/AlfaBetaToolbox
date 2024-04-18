@@ -160,14 +160,17 @@ def calculate_profile(id_profile,df_profile,betas):
             fig = plt.figure()
             ax = fig.gca()
             ax.plot(df_profile['M'],df_profile['Z'],'k')
-            for i_pt, color, h in zip([i_beta,i_alpha,i_alpha_s1,i_alpha_s2],[':k','r','darkorange','yellow'],[b_h,alpha,alpha_s1,alpha_s2]):
+            for i_pt, color, h, lab in zip([i_beta,i_alpha,i_alpha_s1,i_alpha_s2],[':k','r','darkorange','yellow'],[b_h,alpha,alpha_s1,alpha_s2],['Beta','Alpha','1 sigma', '2 sigma']):
                 if np.isfinite(i_pt):
-                    ax.plot([df_profile.at[0,'M'],df_profile.at[i_pt,'M']],[df_profile.at[0,'Z'],df_profile.at[i_pt,'Z']],color)
+                    ax.plot([df_profile.at[0,'M'],df_profile.at[i_pt,'M']],[df_profile.at[0,'Z'],df_profile.at[i_pt,'Z']],color, label='{} ({:.1f}$^\circ$)'.format(lab,h))
                 else:
-                    ax.plot([df_profile.at[0,'M'],df_profile.at[len(df)-1,'M']],[df_profile.at[0,'Z'],df_profile.at[0,'Z'] - (df_profile.at[len(df_profile)-1,'M'] * np.tan(np.deg2rad(h)))],color)
+                    ax.plot([df_profile.at[0,'M'],df_profile.at[len(df)-1,'M']],[df_profile.at[0,'Z'],df_profile.at[0,'Z'] - (df_profile.at[len(df_profile)-1,'M'] * np.tan(np.deg2rad(h)))],color, label='{} ({:.1f}$^\circ$)'.format(lab,h))
             ax.axis('equal')
             ax.axis('tight')
             ax.grid(linestyle=':')
+            ax.set_xlabel('Avstand langs profilet [m]')
+            ax.set_ylabel('Høyde [m]')
+            ax.legend(loc='upper right')
             fig.savefig(os.path.join(outFolder,'profile_{}.png'.format(id_profile)))
             plt.close()
         
